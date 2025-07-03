@@ -34,4 +34,18 @@ jobs:
       with:
         name: WaterdogPE
         path: staging
+    - name: Get Short SHA
+      id: vars
+      run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+    - name: Format ChangeLog
+      id: get-changelog
+      if: success() && github.event_name == 'push' && github.repository == 'testiks2224/SyodogPE' && contains(github.ref_name, 'master')
+      run: echo "changelog=$(echo '${{ github.event.commits[0].message }}' | sed ':a;N;$!ba;s/\n/\\n/g')" >> $GITHUB_OUTPUT
+    - name: Get Time
+      id: time
+      uses: nanzm/get-time-action@v1.1
+      if: github.repository == 'testiks2224/SyodogPE' && contains(github.ref_name, 'master')
+      with:
+        timeZone: 8
+        format: 'YYYY/MM/DD-HH:mm:ss'
     
